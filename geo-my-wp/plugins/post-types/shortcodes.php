@@ -103,6 +103,19 @@ function wppl_get_results($params) {
 				}
 				if($rr == 0) $args = array();	
 			}
+
+			/* test code */ 
+			if(isset($_GET['wppl_cities'])){
+				$args[] = array(
+					'taxonomy' => 'cities',
+					'field' => 'id',
+					'terms' => $_GET['wppl_cities']
+				); 
+				
+			}
+			
+			/* end of test code */ 
+			
 			
 			global $wpdb;
 			// check for keywords in the form and filter it into the wp_query
