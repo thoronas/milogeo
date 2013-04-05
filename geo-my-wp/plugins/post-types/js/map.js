@@ -134,7 +134,7 @@ jQuery(window).load(function(){
 		
 		
 		content +=	'<div class="infoBox">';
-		content +=	'<div class="map-infobox-title"><a href="'+ mainMapArgs.locations[i]['post_permalink'] +'">' + mainMapArgs.locations[i]['post_title'] + '</a></div>'
+		content +=	'<div class="map-infobox-title"><a href="'+ mainMapArgs['permalinks'][i] +'">' + mainMapArgs.locations[i]['post_title'] + '</a></div>'
 		content +=		'<div class="map-infobox-info">';
         content +=		mainMapArgs['address_meta'][i];
         content +=		'<br /> <span>Type: </span>' + mainMapArgs['caretypes'][i]; 
