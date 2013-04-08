@@ -173,6 +173,7 @@ InfoBox.prototype.createInfoBoxDiv_ = function () {
     if (typeof this.content_.nodeType === "undefined") {
       this.div_.innerHTML = this.getCloseBoxImg_() + this.content_;
     } else {
+      this.div_.className = "popup-box"; 
       this.div_.innerHTML = this.getCloseBoxImg_();
       this.div_.appendChild(this.content_);
     }
