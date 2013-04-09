@@ -99,7 +99,7 @@ function InfoBox(opt_opts) {
 
   // Additional options (unique to InfoBox):
   //
-  this.boxClass_ = opt_opts.boxClass || "infoBox";
+  this.boxClass_ = opt_opts.boxClass || "infoBox testclass";
   this.boxStyle_ = opt_opts.boxStyle || {};
   this.closeBoxMargin_ = opt_opts.closeBoxMargin || "2px";
   this.closeBoxURL_ = opt_opts.closeBoxURL || "http://www.google.com/intl/en_us/mapfiles/close.gif";
@@ -191,7 +191,7 @@ InfoBox.prototype.createInfoBoxDiv_ = function () {
       if (this.maxWidth_ !== 0 && this.div_.offsetWidth > this.maxWidth_) {
 
         this.div_.style.width = this.maxWidth_;
-        this.div_.style.overflow = "auto";
+        this.div_.style.overflow = "visible";
         this.fixedWidthSet_ = true;
 
       } else { // The following code is needed to overcome problems with MSIE

@@ -142,7 +142,6 @@ jQuery(window).load(function(){
         content +=		'<br /> <span>Capacity: </span>' + mainMapArgs['capacities'][i]; 
         content +=		'<br /> <a href="' + mainMapArgs['permalinks'][i] +'">more info</a>'; 
         content +=		'</div>'; 
-		console.log(mainMapArgs.locations[i]);
 		
 		return content;
 	}
