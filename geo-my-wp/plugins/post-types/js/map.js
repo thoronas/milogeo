@@ -81,7 +81,7 @@ jQuery(window).load(function(){
 				ptiw = new google.maps.InfoWindow({
 					content: getPTIWContent(ptMarker.id),
 				});
-				ptiw.open(ptMap, ptMarker); 		
+				ptiw.open(ptMap, ptMarker);
 			});
 		}
 		
