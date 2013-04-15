@@ -33,6 +33,7 @@ function wppl_get_results($params) {
 		$lat  = $returned_address['lat'];
 		$long = $returned_address['long'];
 		
+		global $returned_address; 
 		// marker for "your location" //
 		(!empty($wppl['org_address'])) ? $your_loc = array("Your Location", $lat,$long) : $your_loc = "0";
 		if (isset($_GET['wppl_post']) && !empty($_GET['wppl_post']) )  $wppl_post = explode(' ' , $_GET['wppl_post']); 
@@ -84,7 +85,7 @@ function wppl_get_results($params) {
 		if($posts_session_on == 0) {
 			$ptc = count(explode( " ",$_GET['wppl_post']));
 			//// CREATE TAXONOMIES VARIATIONS TO EXECUTE WITH SQL QUERY ////
-			if (isset($ptc) && $ptc<2 && (isset($taxonomies))) {
+			if (isset($ptc) && $ptc<2 /* && (isset($taxonomies)) */) {
 				// count that we have at leaset one category choosen //
 				//otherwise no need to run the first wp_query//
 				$rr = 0; 
@@ -174,7 +175,7 @@ function wppl_get_results($params) {
 				$post_ids[] = $single_result->post_id;
 				$capacities[] = get_field('capacity', $single_result->post_id); 
 				$care_types[] = forge_list_terms('care-type', 'name', $single_result->post_id); 
-				$ageranges[] = /* forge_list_terms('age-range', 'name', $single_location->post_id); */ get_field('age_range',$single_result->post_id);
+				$ageranges[] = get_field('age_range',$single_result->post_id);
 				$post_permalinks[] = get_permalink($single_result->post_id); 
 				$address_meta[] = get_post_meta($single_result->post_id,'_wppl_street',true) . ", " 
 								. get_post_meta($single_result->post_id,'_wppl_city',true) . ", " 

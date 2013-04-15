@@ -134,9 +134,10 @@ jQuery(window).load(function(){
 		
 		
 		content +=	'<div class="infoBox">';
-		content +=	'<div class="map-infobox-title"><a href="'+ mainMapArgs['permalinks'][i] +'">' + mainMapArgs.locations[i]['post_title'] + '</a></div>'
+		content +=	'<div class="map-infobox-title"><a href="'+ mainMapArgs['permalinks'][i] +'">' + mainMapArgs.locations[i]['post_title'] + '</a> </div>'
 		content +=		'<div class="map-infobox-info">';
         content +=		mainMapArgs['address_meta'][i];
+        content += 	'<br /><span>Distance: </span>' + mainMapArgs.locations[i]['distance'] + ' ' + mainMapArgs.units['name'];
         content +=		'<br /> <span>Type: </span>' + mainMapArgs['caretypes'][i]; 
         content +=		'<br /> <span>Ages: </span>' + mainMapArgs['ageranges'][i]; 
         content +=		'<br /> <span>Capacity: </span>' + mainMapArgs['capacities'][i]; 
