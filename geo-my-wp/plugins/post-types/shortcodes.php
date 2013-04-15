@@ -97,7 +97,8 @@ function wppl_get_results($params) {
 						$args[] = array(
 							'taxonomy' => $tax,
 							'field' => 'id',
-							'terms' => array($_GET[$tax])
+/* 							'terms' => array($_GET[$tax]) */
+							'terms' => $_GET[$tax]
 							);
 					}		
 				}
