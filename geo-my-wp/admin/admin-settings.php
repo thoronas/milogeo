@@ -263,7 +263,7 @@ function wppl_shortcodes_page() {
 function wppl_help_shortcodes_page() {
 	$wppl_on = get_option('wppl_plugins');	
 	echo '<div class="wrap">';  
-    //screen_icon('wppl'); 
+    //screen_icon('wppl');
     ?>
 	
 	<!-- <h2><?php echo _e('Shortcodes','wppl'); ?></h2> -->

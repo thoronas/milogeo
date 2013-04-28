@@ -392,7 +392,8 @@ function wppl_save_data($post_id) {
     update_post_meta($post->ID, '_wppl_state', $returned_address['state_short']);
     update_post_meta($post->ID, '_wppl_state_long', $returned_address['state_long']);
     update_post_meta($post->ID, '_wppl_zipcode', $returned_address['zipcode']);
-    update_post_meta($post->ID, '_wppl_country', $returned_address['country_long']);
+    update_post_meta($post->ID, '_wppl_country', $returned_address['country_short']);
+    update_post_meta($post->ID, '_wppl_country_long', $returned_address['country_long']);
     update_post_meta($post->ID, '_wppl_address', $address);
     update_post_meta($post->ID, '_wppl_formatted_address', $returned_address['formatted_address']);
     

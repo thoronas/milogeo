@@ -15,20 +15,31 @@ jQuery(window).load(function(){
 		latlngbounds.extend(yourLocation);
 	}
 	
-	var ptMap = new google.maps.Map(document.getElementById('wppl-pt-map'), {
-		zoom: parseInt(mainMapArgs.zoomLevel),
-		panControl: Boolean(mainMapArgs.mapControls.pan),
-  		zoomControl: Boolean(mainMapArgs.mapControls.zoom),
-  		mapTypeControl: Boolean(mainMapArgs.mapControls.map_type),
-  		scaleControl: Boolean(mainMapArgs.mapControls.scale),
-  		streetViewControl: Boolean(mainMapArgs.mapControls.street_view),
-  		overviewMapControl: Boolean(mainMapArgs.mapControls.overview),
-		center: new google.maps.LatLng(mainMapArgs.yLocation[1],mainMapArgs.yLocation[2]),
-		mapTypeId: google.maps.MapTypeId[mainMapArgs.mapType],
-		mapTypeControlOptions: {
-			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-		}
-	});				
+	if (mainMapArgs.gmwVersion == 'premium') {
+		var ptMap = new google.maps.Map(document.getElementById('wppl-pt-map'), {
+			zoom: parseInt(mainMapArgs.zoomLevel),
+			panControl: Boolean(mainMapArgs.mapControls.pan),
+			zoomControl: Boolean(mainMapArgs.mapControls.zoom),
+			mapTypeControl: Boolean(mainMapArgs.mapControls.map_type),
+			scaleControl: Boolean(mainMapArgs.mapControls.scale),
+			streetViewControl: Boolean(mainMapArgs.mapControls.street_view),
+			overviewMapControl: Boolean(mainMapArgs.mapControls.overview),
+			center: new google.maps.LatLng(mainMapArgs.yLocation[1],mainMapArgs.yLocation[2]),
+			mapTypeId: google.maps.MapTypeId[mainMapArgs.mapType],
+			mapTypeControlOptions: {
+				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+			}
+		});		
+	} else {
+		var ptMap = new google.maps.Map(document.getElementById('wppl-pt-map'), {
+			zoom: parseInt(mainMapArgs.zoomLevel),
+			center: new google.maps.LatLng(mainMapArgs.yLocation[1],mainMapArgs.yLocation[2]),
+			mapTypeId: google.maps.MapTypeId[mainMapArgs.mapType],
+			mapTypeControlOptions: {
+				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+			}
+		});		
+	}	
 	
 	var i, ptiw;
 	ptMarkers = [];
@@ -81,7 +92,7 @@ jQuery(window).load(function(){
 				ptiw = new google.maps.InfoWindow({
 					content: getPTIWContent(ptMarker.id),
 				});
-				ptiw.open(ptMap, ptMarker);
+				ptiw.open(ptMap, ptMarker); 		
 			});
 		}
 		
@@ -131,8 +142,7 @@ jQuery(window).load(function(){
 		content +=		'</div>';
 		content +=  '</div>';
 */
-		
-		
+
 		content +=	'<div class="infoBox">';
 		content +=	'<div class="map-infobox-title"><a href="'+ mainMapArgs['permalinks'][i] +'">' + mainMapArgs.locations[i]['post_title'] + '</a> </div>'
 		content +=		'<div class="map-infobox-info">';
@@ -143,7 +153,6 @@ jQuery(window).load(function(){
         content +=		'<br /> <span>Capacity: </span>' + mainMapArgs['capacities'][i]; 
         content +=		'<br /> <a href="' + mainMapArgs['permalinks'][i] +'">more info</a>'; 
         content +=		'</div>'; 
-		
 		return content;
 	}
 });

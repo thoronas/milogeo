@@ -51,7 +51,7 @@ function wppl_taxonomies($wppl, $post) {
 	if ( isset($wppl['custom_taxes']) ) {
 		echo '<div class="wppl-taxes-wrapper">';
     		if( isset($wppl['taxonomies']) ) {
-    			foreach ($wppl['taxonomies'] as $tax) {
+    			foreach ($wppl['taxonomies'] as $tax => $style) {
     				$terms = get_the_terms($post->ID, $tax);
     		
     				if ( $terms && ! is_wp_error( $terms ) ) :

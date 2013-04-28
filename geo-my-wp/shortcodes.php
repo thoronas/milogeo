@@ -74,12 +74,19 @@ function wppl_shortcode($params) {
 					if ($ptc<2 && (isset($taxonomies))) { ?>	
 						<div class="wppl-category-wrapper">			
 							<?php // output dropdown for each taxonomy //
-							foreach ($taxonomies as $tax) { ?>
-								<div id="<?php echo $tax . '_cat'; ?>">
-									<label for="wppl-category-id"><?php echo get_taxonomy($tax)->labels->singular_name; ?>: </label>
-									<?php //custom_taxonomy_dropdown($tax); ?>				
-								</div>
-							<?php } /* end foreach */ ?>			
+							foreach ($taxonomies as $tax => $style) { ?>
+								<?php if ($style == 'drop') { ?>
+									<div id="<?php echo $tax . '_cat'; ?>">
+										<label for="wppl-category-id"><?php echo get_taxonomy($tax)->labels->singular_name; ?>: </label>
+										<?php custom_taxonomy_dropdown($tax); ?>				
+									</div>
+								<?php } else if (GMW_VERSION == 'premium' && $style== 'check') { ?>
+									<div id="<?php echo $tax . '_cat'; ?>">
+										<label for="wppl-checkbox-id"><?php echo get_taxonomy($tax)->labels->singular_name; ?>: </label>
+										<?php custom_taxonomy_checkboxes($tax) ?>
+									</div>
+								<?php } /* end foreach */ ?>
+							<?php } ?>
 						</div><!-- category-wrapper -->
 					<?php } /* end taxonomies dropdown */ ?>
 				

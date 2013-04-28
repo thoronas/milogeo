@@ -51,7 +51,30 @@ $args = array(
 		'show_option_all'   => ' - All - ',
 		);		
 wp_dropdown_categories($args); 
-} 
+}
+
+function gmw_query_taxonomies($taxonomies) {	
+	$rr = 0; 
+	$get_tax = false;
+	$args = array('relation' => 'AND');
+	foreach ($taxonomies as $tax => $style) { 
+		
+		if ($style == 'drop') {	
+			$get_tax = false;
+			if(isset($_GET[$tax])) $get_tax = $_GET[$tax];
+			if ($get_tax != 0) {
+				$rr++;
+				$args[] = array(
+					'taxonomy' => $tax,
+					'field' => 'id',
+					'terms' => $_GET[$tax]
+				);
+			}
+		} 
+	}
+	if($rr == 0) $args = array();
+	return $args;
+}
 
 // when post status changes - change it in our table as well //
 function filter_transition_post_status( $new_status, $old_status, $post ) { 
@@ -75,5 +98,54 @@ function delete_address_map_rows()	{
 	);
 }
 add_action('before_delete_post', 'delete_address_map_rows'); 
+
+function gmw_add_location_to_post($address, $postID, $post_type, $post_title, $post_status, $apt, $phone, $fax, $email, $website ) {
+
+	 $returned_address = ConvertToCoords($address);
+ 	// save the address custom fields
+    update_post_meta($post->ID, '_wppl_street', $returned_address['street']);
+    update_post_meta($post->ID, '_wppl_city', $returned_address['city']);
+    update_post_meta($post->ID, '_wppl_state', $returned_address['state_short']);
+    update_post_meta($post->ID, '_wppl_state_long', $returned_address['state_long']);
+    update_post_meta($post->ID, '_wppl_zipcode', $returned_address['zipcode']);
+    update_post_meta($post->ID, '_wppl_country', $returned_address['country_short']);
+    update_post_meta($post->ID, '_wppl_country_long', $returned_address['country_long']);
+    update_post_meta($post->ID, '_wppl_address', $address);
+    update_post_meta($post->ID, '_wppl_formatted_address', $returned_address['formatted_address']);
+    
+    // save the additional custom fields
+    update_post_meta($post->ID, '_wppl_phone', $phone);
+    update_post_meta($post->ID, '_wppl_fax', $fax);
+    update_post_meta($post->ID, '_wppl_email', $email);
+    update_post_meta($post->ID, '_wppl_website', $website);
+    
+    // save to databse
+    $wpdb->replace( $wpdb->prefix . 'places_locator', 
+		array( 
+				'post_id'			=> $postID, 
+				'feature'  			=> 0,
+				'post_type' 		=> $post_type,
+				'post_title' 		=> $post_title, 
+				'post_status'		=> $post_status, 
+				'street' 			=> $returned_address['street'],
+				'apt' 				=> $apt, 
+				'city' 				=> $returned_address['city'],
+				'state' 			=> $returned_address['state_short'], 
+				'state_long' 		=> $returned_address['state_long'], 
+				'zipcode' 			=> $returned_address['zipcode'], 
+				'country' 			=> $returned_address['country_short'],
+				'country_long' 		=> $returned_address['country_long'], 
+				'address' 			=> $address,
+				'formatted_address' => $returned_address['formatted_address'],
+				'phone' 			=> $phone, 
+				'fax' 				=> $fax, 
+				'email' 			=> $email, 
+				'website' 			=> $website,
+				'lat' 				=> $returned_address['lat'], 
+				'long' 				=> $returned_address['long'],	
+				'map_icon'  		=> '_default',			
+			)
+		);
+}
 
 ?>

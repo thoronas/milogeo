@@ -67,42 +67,40 @@
 						<td>
 							<p><label for="label-post-types-<?php echo $e_id; ?>"><?php echo _e('Post types:','wppl'); ?></label></p>
 						</td>
-						<td id="posts-checkboxes-<?php echo $e_id; ?>" <?php if (!$option['post_types']) { echo 'style="background: #FAA0A0"' ;}; ?>>
+						<td class="posts-checkboxes-wrapper" id="<?php echo $e_id; ?>" <?php if (!$option['post_types']) { echo 'style="background: #FAA0A0"' ;}; ?>>
 							<?php foreach ($posts as $post) { ?>
-							<p><input type="checkbox" name="<?php echo 'wppl_shortcode[' .$e_id .'][post_types][]'; ?>" value="<?php echo $post; ?>" style="margin-left: 10px;" id="<?php echo $e_id; ?>" onchange="change_it(this.name,this.id);" <?php if ($option['post_types']) { echo (in_array($post, $option['post_types'])) ? ' checked=checked' : '';} ?>>&nbsp;&nbsp;<?php echo get_post_type_object($post)->labels->name; ?></p>
+							<p><input type="checkbox" name="<?php echo 'wppl_shortcode[' .$e_id .'][post_types][]'; ?>" value="<?php echo $post; ?>" style="margin-left: 10px;" id="<?php echo $post . '_' .$e_id; ?>" class="post-types-tax" <?php if ($option['post_types']) { echo (in_array($post, $option['post_types'])) ? ' checked=checked' : '';} ?>>&nbsp;&nbsp;<?php echo get_post_type_object($post)->labels->name; ?></p>
 							<?php } ?>
 						</td>
 					</tr>
-					
-					<tr style="height:40px;" class="grand-map-yes">
-						<td>
-							<p><label for="label-post-types-<?php echo $e_id; ?>"><?php echo _e('Post types:','wppl'); ?></label></p>
-						</td>
-						<td id="posts-checkboxes-<?php echo $e_id; ?>" <?php if (!$option['post_types']) { echo 'style="background: #FAA0A0"' ;}; ?>>
-							<?php foreach ($posts as $post) { ?>
-							<p><input type="checkbox" name="<?php echo 'wppl_shortcode[' .$e_id .'][post_types][]'; ?>" value="<?php echo $post; ?>" style="margin-left: 10px;" id="<?php echo $e_id; ?>" onchange="change_it(this.name,this.id);" <?php if ($option['post_types']) { echo (in_array($post, $option['post_types'])) ? ' checked=checked' : '';} ?>>&nbsp;&nbsp;<?php echo get_post_type_object($post)->labels->name; ?></p>
-							<?php } ?>
-						</td>
-					</tr>
-			
+								
 					<tr style=" height:40px;" class="post-types-yes groups-not friends-not" >
 					 	<td>
 							<p><label for="label-taxonomies-<?php echo $e_id; ?>"><?php echo _e('Taxonomies: (no taxonomies for multiple post types):','wppl'); ?></label></p>
 						</td>
-						<td class="taxes-<?php echo $e_id; ?>" style=" padding: 8px;">
+						<td id="taxes-<?php echo $e_id; ?>" style=" padding: 8px;">
 							<?php foreach ($posts as $post) {
 									$taxes = get_object_taxonomies($post);
-									echo '<div id="' . $post . '_cat_' . $e_id . '" '; echo ((count($option['post_types']) == 1) && (in_array($post, $option['post_types']))) ? 'style="display: block; " ' : 'style="display: none;"'; echo '>';
-									foreach ($taxes as $tax) { 
-				 						if (is_taxonomy_hierarchical($tax)) { 
-											echo '<p><input type="checkbox" name="wppl_shortcode[' .$e_id .'][taxonomies][]" value="' . $tax .'" '; if($option['taxonomies']) { echo (in_array($tax , $option['taxonomies'])) ? "checked=checked" : "";}; echo  ' style="margin-left: 10px; " />&nbsp;&nbsp;' . get_taxonomy($tax)->labels->singular_name . '</p>';
+									echo '<div id="' . $post . '_' . $e_id .'_cat' . '" class="taxes-wrapper" '; echo ((count($option['post_types']) == 1) && (in_array($post, $option['post_types']))) ? 'style="display: block; " ' : 'style="display: none;"'; echo '>';
+										foreach ($taxes as $tax) { 
+											if (is_taxonomy_hierarchical($tax)) { 
+									
+												echo '<div style="border-bottom:1px solid #eee;padding-bottom: 10px;margin-bottom: 10px;">
+																											
+														<strong>'. get_taxonomy($tax)->labels->singular_name . ':</strong>
+														<span>
+															<input type="radio" class="radio-na" name="wppl_shortcode[' .$e_id .'][taxonomies]['.$tax.']" value="na" '; if( $option['taxonomies'][$tax] == 'na' ) { echo  "checked=checked"; }; echo  ' style="margin-left: 10px; " />Exclude
+															<input type="radio" name="wppl_shortcode[' .$e_id .'][taxonomies]['.$tax.']" value="drop" '; if( $option['taxonomies'][$tax] == 'drop' ) { echo  "checked=checked"; }; echo  ' style="margin-left: 10px; " />Dropdown
+															<input type="radio" name="wppl_shortcode[' .$e_id .'][taxonomies]['.$tax.']" value="check" '; if( $option['taxonomies'][$tax] == 'check' ) { echo  "checked=checked"; }; echo  ' style="margin-left: 10px; " '; if (GMW_VERSION != 'premium') echo "disabled"; echo '/>Checkboxes
+														</span>
+													</div>';
+											}
 										}
-									}
 									echo '</div>';
 								} ?>
 						</td>
 					</tr>
-					
+					<!-- <p><strong>Category: </strong><input type="checkbox" name="wppl_shortcode[' .$e_id .'][taxonomies][]" value="' . $tax .'" '; if($option['taxonomies']) { echo (in_array($tax , $option['taxonomies'])) ? "checked=checked" : "";}; echo  ' style="margin-left: 10px; " />&nbsp;&nbsp;' . get_taxonomy($tax)->labels->singular_name . '</p>	-->
 					<?php if ($wppl_on['friends']) { ?>
 					<tr style="height:40px;" class="post-types-not groups-not friends-yes">
 						<td>

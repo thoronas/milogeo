@@ -1,4 +1,18 @@
 <?php
+
+function gmw_setup_globals() {
+	global $bp, $wpdb;
+
+	$bp->gmw_location->id = 'gmw_location';
+
+	//$bp->gmw_location->table_name = $wpdb->base_prefix . 'bp_invite_anyone';
+	$bp->gmw_location->slug = 'my-location';
+
+	/* Register this in the active components array */
+	$bp->active_components[$bp->gmw_location->slug] = $bp->gmw_location->id;
+}
+add_action( 'bp_setup_globals', 'gmw_setup_globals', 2 );
+
 // function save's user location //
 function addLocation(){
 	global $wpdb, $bp;
@@ -88,14 +102,16 @@ function add_bp_location_tab () {
 	bp_core_new_nav_item(
    	array(
         'name' => __('Location', 'buddypress'),
-        'slug' => 'wppl-location',
+        'slug' => $bp->gmw_location->slug,
         'position' => 50,
         'show_for_displayed_user' => true,
         'screen_function' => $func,
         'item_css_id' => 'wppl-my-location'
     ));
 }
-    	 
+
+add_action( 'bp_setup_nav', 'add_bp_location_tab' );
+ 	 
 function my_location_page () {
 	add_action( 'bp_template_title', 'my_location_page_title' );
 	add_action( 'bp_template_content', 'my_location_page_content' );
@@ -145,5 +161,5 @@ function user_location_page_title() {
 function user_location_page_content() { 
 	include 'user-location-tab.php';
 }
-add_action('bp_init', 'add_bp_location_tab');
+
 ?>

@@ -1,5 +1,5 @@
 .wppl-map-wrapper img {
-	max-width:initial;
+	max-width:initial !important;
 }
 
 h2.wppl-h2 {
@@ -1381,6 +1381,7 @@ ul#add-to-blog-users {
 }
 
 /* GEO MAP */
+/*
 
 .wppl-gm-wrapper {
 	//background:#ECECEC;
@@ -1558,4 +1559,4 @@ ul#add-to-blog-users {
 	width:18px;
 	height:18px;
 }
-	
+	*/

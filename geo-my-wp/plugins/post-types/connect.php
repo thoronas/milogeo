@@ -10,6 +10,7 @@ if (!isset($wppl_on['post_types']) || $wppl_on['post_types'] != 1 ) return;
 if ( is_admin() ) {
 	include_once GMW_PT_PATH . 'admin/admin-settings.php';
 	include_once GMW_PT_PATH . 'admin/help-shortcodes.php';
+	wp_enqueue_script( 'wppl-pt-admin-settings', GMW_PT_URL . 'admin/js/admin-settings.js', array(),false,true );
 	
 	//// Include javascripts, jquery and styles only in choosen post types admin area ////
 	function wppl_admin_page() {

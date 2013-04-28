@@ -33,7 +33,6 @@ function wppl_get_results($params) {
 		$lat  = $returned_address['lat'];
 		$long = $returned_address['long'];
 		
-		global $returned_address; 
 		// marker for "your location" //
 		(!empty($wppl['org_address'])) ? $your_loc = array("Your Location", $lat,$long) : $your_loc = "0";
 		if (isset($_GET['wppl_post']) && !empty($_GET['wppl_post']) )  $wppl_post = explode(' ' , $_GET['wppl_post']); 
@@ -86,38 +85,18 @@ function wppl_get_results($params) {
 			$ptc = count(explode( " ",$_GET['wppl_post']));
 			//// CREATE TAXONOMIES VARIATIONS TO EXECUTE WITH SQL QUERY ////
 			if (isset($ptc) && $ptc<2 && (isset($taxonomies))) {
-				// count that we have at leaset one category choosen //
-				//otherwise no need to run the first wp_query//
-				$rr = 0; 
-				$get_tax = false;
-				$args = array('relation' => 'AND');
-				foreach ($taxonomies as $tax) { 
-					if(isset($_GET[$tax])) $get_tax = $_GET[$tax];
-					if ($get_tax != 0) {
-						$rr++;
-						$args[] = array(
-							'taxonomy' => $tax,
-							'field' => 'id',
-/* 							'terms' => array($_GET[$tax]) */
-							'terms' => $_GET[$tax]
-							);
-					}		
-				}
-				if($rr == 0) $args = array();	
-			}
+				if (GMW_VERSION == 'premium' ) $tax_args = gmw_query_taxonomies_premium($taxonomies);
+				else $tax_args = gmw_query_taxonomies($taxonomies);
 
-			/* test code */ 
-			if(isset($_GET['wppl_cities'])){
-				$args[] = array(
-					'taxonomy' => 'cities',
-					'field' => 'id',
-					'terms' => $_GET['wppl_cities']
-				); 
-				
+				//custom code from Flynn
+				if(isset($_GET['wppl_cities'])){
+				$tax_args[] = array(
+						'taxonomy' => 'cities',
+						'field' => 'id',
+						'terms' => $_GET['wppl_cities']
+					);
+				}
 			}
-			
-			/* end of test code */ 
-			
 			
 			global $wpdb;
 			// check for keywords in the form and filter it into the wp_query
@@ -130,7 +109,7 @@ function wppl_get_results($params) {
 			}
 			
 			// first post query to get all post ids
-			$gmw_query = new WP_Query(array('post_type' => $wppl_post, 'post_status' => array('publish'), 'tax_query' => $args, 'fields' => 'ids', 'posts_per_page'=>-1 ));
+			$gmw_query = new WP_Query(array('post_type' => $wppl_post, 'post_status' => array('publish'), 'tax_query' => $tax_args, 'fields' => 'ids', 'posts_per_page'=>-1 ));
 			remove_filter( 'posts_where', 'gmw_posts_where' );
 			
 			//if no results in first query no need to run second query
@@ -169,10 +148,9 @@ function wppl_get_results($params) {
 			//////// DISPLAY OUR POSTS LOOP - YAAAAAAYYY  /////////	
 			$mc = 1; /* single maps counter */ 
 			$pc = ($from_page * $per_page) +1; /* post count, to display number of post */
-			
+
 			// Forge - pass custom meta from posts
 			foreach ($wppl['posts_within'] as $single_result) {
-				$post_ids[] = $single_result->post_id;
 				$capacities[] = get_field('capacity', $single_result->post_id); 
 				$care_types[] = forge_list_terms('care-type', 'name', $single_result->post_id); 
 				$ageranges[] = get_field('age_range',$single_result->post_id);
@@ -183,16 +161,16 @@ function wppl_get_results($params) {
 								. get_post_meta($single_result->post_id,'_wppl_zipcode',true);  
 			}
 			
+		
 			if( ($results_type == "both") || ($results_type == "map") ) $map_yes = 1;
 			include_once GMW_PT_PATH .'template-functions.php';
 			
 			echo '<div class="wppl-output-wrapper-'. $wppl['form_id'] . '" id="wppl-output-wrapper" style="width:'; echo ($main_wrapper_width) ? $main_wrapper_width.'px' : '100%'; echo '">';
-				if ($map_yes == 1)echo '<div id="map-container"><div id="show-hide-btn-wrapper"><a href="#" class="map-show-hide-btn"><img src="'.GMW_URL.'/images/show-map-icon.png" /></a></div>';
+				if ($map_yes == 1)echo '<div id="show-hide-btn-wrapper"><a href="#" class="map-show-hide-btn"><img src="'.GMW_URL.'/images/show-map-icon.png" /></a></div>';
 			
 				echo '<div class="wppl-pagination-wrapper">';
-					/* echo '<h2 class="wppl-h2"> Showing ' . count($wppl['posts_within']) . ' out of ' . count($total_results) . ' results ' . $showing . '</h2>'; */
-					echo '<h2 class="wppl-h2"> Showing ' . count($wppl['posts_within']) . ' out of ' . count($total_results) . ' results </h2>';
-
+					echo '<h2 class="wppl-h2"> Showing ' . count($wppl['posts_within']) . ' out of ' . count($total_results) . ' results ' . $showing . '</h2>';
+					
 					pagination_links($pages, $per_page);
 				
 				echo '</div>'; // pagination wrapper//
@@ -204,7 +182,7 @@ function wppl_get_results($params) {
 					echo		'<div id="wppl-pt-map" style="width:'; echo (!empty($map_width)) ? $map_width : 500 ; echo 'px; height:'; echo (!empty($map_height)) ? $map_height : 500; echo 'px;"></div>';
 					echo		'<img class="map-loader" src="'.GMW_URL. '/images/map-loader.gif" style="position:absolute;top:45%;left:33%;"/>';
 					echo	'</div>';// map wrapper //
-					echo '</div></div>'; // show hide map //	
+					echo '</div>'; // show hide map //	
 					
 				};	
 				echo	'<div class="clear"></div>';	
@@ -233,7 +211,7 @@ function wppl_get_results($params) {
 				echo	'</div>'; // output wrapper //
 				
 				if ( ( isset($map_yes) && $map_yes == 1 ) || ( isset($single_map) && $single_map == 1) ) {
-					
+					if (!isset($map_controls) || empty($map_controls) ) $map_controls = false;
 					$main_map_args = array(
 						'sMapType' 		=> $single_map_type,
 						'locations' 	=> $wppl['posts_within'],
@@ -250,6 +228,7 @@ function wppl_get_results($params) {
 						'units' 		=> $wppl['units_array'],
 						'postTypeIcons' => $wppl_options['post_types_icons'],
 						'mapControls'	=> $map_controls,
+						'gmwVersion'	=> GMW_VERSION, 
 						'capacities'	=> $capacities, 
 						'caretypes' 	=> $care_types,
 						'ageranges'		=> $ageranges, 
@@ -270,7 +249,7 @@ function wppl_get_results($params) {
     		// DONE - GOOD JOB //	
     	// IF NO RESULTS //
     	} else { 					
-    		echo '<h2 class="wppl-h2">' . $wppl_options['no_results']. '</h2>'; echo ($wppl_options['wider_search']) ? ' <p>Thank you for your patience during our beta launch. We are expanding quickly into new locations daily. Please come back and visit soon!</p><p> See all <a href="'. add_query_arg('wppl_address', ''). '" onclick="document.wppl_form.submit();">locations</a> we currently cover.</p>' : ''; echo '';
+    		echo '<h2 class="wppl-h2">' . $wppl_options['no_results']. '</h2>'; echo ($wppl_options['wider_search']) ? ' <p>please, <a href="'. add_query_arg('wppl_distance', $wppl_options['wider_search_value']). '" onclick="document.wppl_form.submit();">click here</a> to search wihtin a greater range or <a href="'. add_query_arg('wppl_address', ''). '" onclick="document.wppl_form.submit();">click here</a> to see all results. </p>' : ''; echo '';
    		} // end function //
     }	 
     
@@ -337,11 +316,11 @@ function wppl_single_location($single) {
    		 	wp_enqueue_script( 'wppl-infobox', true);
    		 	wp_localize_script('wppl-sl-map', 'singleLM', $single_location_args);
 		 	
-    		$single_address = ( isset($get_loc[$mmc]['address']) ) ? $get_loc[$mmc]['address'] : 'N/A';
-			$single_phone 	= ( isset($get_loc[$mmc]['phone']) )   ? $get_loc[$mmc]['phone']   : 'N/A';
-			$single_fax 	= ( isset($get_loc[$mmc]['fax']) ) 	   ? $get_loc[$mmc]['fax'] : 'N/A';
-			$single_email 	= ( isset($get_loc[$mmc]['email']) )   ? $get_loc[$mmc]['email'] : 'N/A';
-			$single_website = ( isset($get_loc[$mmc]['website']) ) ? '<a href="http://' . $get_loc[$mmc]['website']. '" target="_blank">' .$get_loc[$mmc]['website']. '</a>' : "N/A";
+    		$single_address = ( isset($get_loc[$mmc]['address']) && !empty($get_loc[$mmc]['address'])) ? $get_loc[$mmc]['address'] : 'N/A';
+			$single_phone 	= ( isset($get_loc[$mmc]['phone']) && !empty($get_loc[$mmc]['phone']) ) ? $get_loc[$mmc]['phone']   : 'N/A';
+			$single_fax 	= ( isset($get_loc[$mmc]['fax']) ) && !empty($get_loc[$mmc]['fax'])	   ? $get_loc[$mmc]['fax'] : 'N/A';
+			$single_email 	= ( isset($get_loc[$mmc]['email']) && !empty($get_loc[$mmc]['email']))   ? $get_loc[$mmc]['email'] : 'N/A';
+			$single_website = ( isset($get_loc[$mmc]['website']) && !empty($get_loc[$mmc]['website']) ) ? '<a href="http://' . $get_loc[$mmc]['website']. '" target="_blank">' .$get_loc[$mmc]['website']. '</a>' : "N/A";
 		
  			$single_map .='';
  			$single_map .=	'<div class="wppl-single-wrapper">';

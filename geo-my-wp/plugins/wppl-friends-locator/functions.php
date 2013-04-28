@@ -437,6 +437,7 @@ function wppl_bp_query_results($params) {
 				<?php 
 				/* pass results to javascript to use to display the map and markers */		
 				if ( isset($map_yes) && $map_yes == 1) {
+					if (!isset($map_controls) || empty($map_controls) ) $map_controls = false;
 					$members_map_args = array(
 						'avatar'			=> $avatars,
 						'locations'			=> $user_ids,

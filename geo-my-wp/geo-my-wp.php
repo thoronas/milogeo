@@ -1,16 +1,31 @@
 <?php
 /*
-Plugin Name: GEO my WP Premium
+Plugin Name: GEO my WP 
 Plugin URI: http://www.geomywp.com 
 Description: Add location to any post types, pages or members (using Buddypress) and create an advance proximity search.
 Author: Eyal Fitoussi
-Version: 1.7.1.5
+Version: 1.7.2
 Author URI: http://www.geomywp.com 
 
 */
+/*
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
+the Free Software Foundation.
 
-$gmw_current_version = '1.7.1.5';
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+$gmw_current_version = '1.7.2';
+
+define('GMW_VERSION' , 'free');
 define('GMW_URL', plugins_url() . '/geo-my-wp');
 define('GMW_PATH', plugin_dir_path(dirname(__FILE__)) . 'geo-my-wp');
 define('GMW_AJAX' ,get_bloginfo('wpurl') .'/wp-admin/admin-ajax.php');
@@ -66,19 +81,11 @@ include_once GMW_PATH . '/widgets.php';
 
 if (is_admin() ) {
 	include_once GMW_PATH . '/admin/admin-settings.php';
-	//include_once 'admin/categories.php';
 }
 
 // include add-ons
 include_once GMW_PATH .'/plugins/post-types/connect.php';
 include_once GMW_PATH .'/plugins/wppl-friends-locator/connect.php';
-include_once GMW_PATH .'/plugins/near-members-widget/connect.php';
-include_once GMW_PATH .'/plugins/shortcodes-widgets-addons/connect.php';
-include_once GMW_PATH .'/plugins/featured-map-icons/connect.php';
-include_once GMW_PATH .'/plugins/featured-posts/connect.php';
-include_once GMW_PATH .'/plugins/xprofile-fields/connect.php';
-include_once GMW_PATH .'/plugins/settings-addons/connect.php';  
-include_once GMW_PATH .'/plugins/near-locations-widget/connect.php';
 
 function wppl_theme_color($wppl_options) {
     if($wppl_options['use_theme_color']) {

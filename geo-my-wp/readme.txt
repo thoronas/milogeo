@@ -2,9 +2,9 @@
 Contributors: Ninjew
 Donate link: http://geomywp.com/
 Tags: zipcode,radius,search,posts,address,distance,google,map,directions,locations
-Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 1.7
+Requires at least: 3.1
+Tested up to: 3.5.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,15 @@ Widgets:
 1. for any questions, error report and suggestions please email info@geomywp.com or visit http://www.geomywp.com
 
 == Changelog ==
+
+== 1.7.2 ==
+* PLease Note: in the shortcode search form page (admin) the taxonomies setting had been modified and so you might have to save the taxonomies settings again.
+* Compatible with Wordpress 3.5.1
+* bug Fix - "Get Directions" link on single post map.
+* Show N/A for additional fields (when empty) in single post map.
+* Fix bug where deleted posts not being deleted from wp_places_locator table in database.
+* Buddypress Location slug changed from "wppl-location" to "My-location".
+* Other minor frontend and backend bug fixes.
 
 == 1.7 ==
 * This is a major update - most of the core code has improved for better performance, security issues and many bug fix.
