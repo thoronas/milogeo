@@ -85,7 +85,7 @@ function wppl_get_results($params) {
 		if($posts_session_on == 0) {
 			$ptc = count(explode( " ",$_GET['wppl_post']));
 			//// CREATE TAXONOMIES VARIATIONS TO EXECUTE WITH SQL QUERY ////
-			if (isset($ptc) && $ptc<2 /* && (isset($taxonomies)) */) {
+			if (isset($ptc) && $ptc<2 && (isset($taxonomies))) {
 				// count that we have at leaset one category choosen //
 				//otherwise no need to run the first wp_query//
 				$rr = 0; 
